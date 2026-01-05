@@ -1,0 +1,89 @@
+.newEntryCard {
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.newEntryHeader {
+  margin-bottom: 12px;
+}
+
+.newEntryTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.newEntrySubtitle {
+  margin: 6px 0 0 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.newEntryForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.newEntryField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.newEntryLabel {
+  font-size: 0.9rem;
+  color: #111;
+}
+
+.newEntryInput {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d6d6d6;
+  background-color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.newEntryInput:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.newEntryButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.newEntryButton {
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #0f172a;
+  color: #ffffff;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.newEntryButton:hover {
+  background-color: #020617;
+}
+
+.newEntryButton:active {
+  transform: scale(0.98);
+}
+
+.newEntryButton.secondary {
+  background-color: #e5e7eb;
+  color: #111;
+}
+
+.newEntryButton.secondary:hover {
+  background-color: #d1d5db;
+}
