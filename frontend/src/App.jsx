@@ -3,6 +3,7 @@ import Header from "./Header"
 import ReviewEntries from './ReviewEntries'
 import NewEntryBox from './NewEntryBox'
 import InfoBox from "./InfoBox"
+import AllEntries from "./AllEntries"
 
 function App() {
   return (
@@ -10,10 +11,9 @@ function App() {
       <div>
         <Header />
         <InfoBox />
-        <div className="ReviewEntriesBox">
-          <ReviewEntries />
-        </div>
+        <ReviewEntries />
         <NewEntryBox />
+        <AllEntries />
       </div>
     </>
   )

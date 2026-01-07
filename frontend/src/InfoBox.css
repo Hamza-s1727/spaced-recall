@@ -1,7 +1,6 @@
 .infoContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 0.5rem;
 
     padding: 1.25rem 1.5rem;
@@ -15,10 +14,9 @@
 
 
 h2 {
-    text-align: center;
+    max-width: clamp(30ch, 75%, 100ch);
 }
 
 .infoContainer p {
     max-width: clamp(30ch, 75%, 100ch);
-    text-align: center;
 }

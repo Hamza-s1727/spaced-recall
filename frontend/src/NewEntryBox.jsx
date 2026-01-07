@@ -20,6 +20,17 @@ export default function NewEntryBox({ onAdd }) {
     setTopic("");
   }
 
+  async function addNewEntry() {
+    const res = await fetch("http://localhost:3000/concept/add", {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({concept: "Taylor Series", topic: "Mathematics", initialDate: null })
+    } )
+    const data = await res.json();
+    console.log(JSON.stringify(data))
+    console.log("status ", res.status)
+  }
+
   return (
     <div className="newEntryCard">
       <div className="newEntryHeader">
@@ -57,7 +68,7 @@ export default function NewEntryBox({ onAdd }) {
         </div>
 
         <div className="newEntryButtons">
-          <button className="newEntryButton" type="submit">
+          <button className="newEntryButton" type="submit" onClick={addNewEntry}>
             Add Entry
           </button>
           <button

@@ -8,16 +8,17 @@ export default function ReviewEntries () {
     return (
         <>
         <div className="reviewEntriesContainer">
-        <button className="reviewEntriesButton" onClick={() => {setOpen(!open)}}>View Entries for Today</button>
+        <button className="reviewEntriesButton" onClick={() => {setOpen(!open)}}>View All Entries in Database</button>
         </div>
-        <div className="entriesBox">
-        {open && <div className="entriesBox">
+        <div className="EntriesBox">
+            {open && <div className="EntriesBox">
             <Entry 
             concept="The Master Theorem"
             topic="Computer Science"
             initialDate="September 4, 2024"
             lastReviewed="October 5, 2025"
             nextReviewDate="November 5, 2025"
+            reviewable={false}
             />
 
              <Entry 
@@ -26,6 +27,7 @@ export default function ReviewEntries () {
             initialDate="September 4, 2024"
             lastReviewed="October 5, 2025"
             nextReviewDate="November 5, 2025"
+            reviewable={false}
             />
             </div>}
         </div>

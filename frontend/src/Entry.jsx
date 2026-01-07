@@ -1,5 +1,5 @@
 import "./Entry.css"
-export default function Entry ({topic, concept, initialDate, lastReviewed, nextReviewDate}) {
+export default function Entry ({topic, concept, initialDate, lastReviewed, nextReviewDate, reviewable = true}) {
     return (
         <div className="entryCard">
             <ul className="entryList">
@@ -10,7 +10,7 @@ export default function Entry ({topic, concept, initialDate, lastReviewed, nextR
                 <li>You'll review this again on: <strong>{nextReviewDate}</strong></li>
             </ul>
             <div className="entryButtons">
-                <button className="reviewButton">Mark as Reviewed</button>
+                {reviewable && <button className="reviewButton">Mark as Reviewed</button>}
                 <button className="deleteButton">Delete Entry</button>
             </div>
         </div>
