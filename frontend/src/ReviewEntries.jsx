@@ -1,34 +1,41 @@
-import { useState } from "react"
-import Entry from "./Entry"
-import "./ReviewEntries.css"
+import { useState } from "react";
+import Entry from "./Entry";
+import "./ReviewEntries.css";
 
-export default function ReviewEntries () {
-    const [open, setOpen] = useState(false);
+export default function ReviewEntries({ entries = [], deleteFunc }) {
+  const [open, setOpen] = useState(false);
 
-    return (
-        <>
-        <div className="reviewEntriesContainer">
-        <button className="reviewEntriesButton" onClick={() => {setOpen(!open)}}>View Entries for Today</button>
-        </div>
-        <div className="entriesBox">
-        {open && <div className="entriesBox">
-            <Entry 
-            concept="The Master Theorem"
-            topic="Computer Science"
-            initialDate="September 4, 2024"
-            lastReviewed="October 5, 2025"
-            nextReviewDate="November 5, 2025"
-            />
-
-             <Entry 
-            concept="The Master Theorem"
-            topic="Computer Science"
-            initialDate="September 4, 2024"
-            lastReviewed="October 5, 2025"
-            nextReviewDate="November 5, 2025"
-            />
-            </div>}
-        </div>
-        </>
-    )
+  return (
+    <>
+      <div className="reviewEntriesContainer">
+        <button
+          className="reviewEntriesButton"
+          onClick={() => setOpen(!open)}
+        >
+          View Entries for Today
+        </button>
+      </div>
+      <div className="entriesBox">
+        {open && (
+          <div className="entriesBox">
+            {entries.length === 0 ? (
+              <p className="emptyState">You are done for today!</p>
+            ) : (
+              entries.map((e) => (
+                <Entry
+                  concept={e.concept}
+                  topic={e.topic}
+                  initialDate={e.initialDate}
+                  lastReviewed={e.lastReviewed}
+                  nextReviewDate={e.nextReviewDate}
+                  id={e.id}
+                  deleteFunc={deleteFunc}
+                />
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    </>
+  );
 }

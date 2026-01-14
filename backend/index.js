@@ -45,10 +45,27 @@ app.post("/concept/add", (req, res) => {
   concepts.unshift(newConcept)
   res.status(201)
   res.set("Content-Type", "application/json")
-  console.log("Post worked")
+  console.log("Sucessfully added concept ", concept)
   res.send(JSON.stringify(newConcept))
 })
 
+app.delete("/concept/:id", (req, res) => {
+  const targetId = Number(req.params.id);
+
+  const index = concepts.findIndex(concept => concept.id == targetId);
+
+  if (index == -1) {
+    res.status(404)
+    return JSON.stringify({error: "not found"})
+  }
+
+  concepts.splice(index, 1);
+
+  res.set("Content-Type", "application/json")
+  console.log("Sucessfully deleted concept with id", id)
+  res.status(204)
+
+})
 
 
 app.listen(3000, () => {

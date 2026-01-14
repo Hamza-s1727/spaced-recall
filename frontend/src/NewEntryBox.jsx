@@ -1,9 +1,12 @@
 import { useState } from "react";
 import "./NewEntryBox.css"
 
-export default function NewEntryBox({ onAdd }) {
+export default function NewEntryBox({ addFunc }) {
   const [concept, setConcept] = useState("");
   const [topic, setTopic] = useState("");
+
+  const [entries, setEntries] = useState([]);
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -12,9 +15,7 @@ export default function NewEntryBox({ onAdd }) {
     const t = topic.trim();
     if (!c || !t) return;
 
-    if (onAdd) {
-      onAdd({ concept: c, topic: t });
-    }
+    addFunc({ concept: c, topic: t, initialDate: "2025-01-01", lastReviewed: null, nextReviewDate: "2025-01-02" });
 
     setConcept("");
     setTopic("");
