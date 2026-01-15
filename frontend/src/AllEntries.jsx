@@ -12,13 +12,14 @@ export default function AllEntries({ entries = [], deleteFunc}) {
           className="reviewEntriesButton"
           onClick={() => setOpen(!open)}
         >
-          View Entries for Today
+          View all Entries in Database
         </button>
       </div>
       <div className="entriesBox">
         {open && (
           <div className="entriesBox">
-            {entries.length === 0 ? (
+            {
+            entries.length === 0 ? (
               <p className="emptyState">You havent added any concepts!</p>
             ) : (
               entries.map((e) => (

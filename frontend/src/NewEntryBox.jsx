@@ -5,9 +5,6 @@ export default function NewEntryBox({ addFunc }) {
   const [concept, setConcept] = useState("");
   const [topic, setTopic] = useState("");
 
-  const [entries, setEntries] = useState([]);
-
-
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -15,21 +12,10 @@ export default function NewEntryBox({ addFunc }) {
     const t = topic.trim();
     if (!c || !t) return;
 
-    addFunc({ concept: c, topic: t, initialDate: "2025-01-01", lastReviewed: null, nextReviewDate: "2025-01-02" });
+    addFunc({ concept: c, topic: t, initialDate: new Date().toISOString().slice(0, 10), lastReviewed: null, nextReviewDate: "2025-01-02" });
 
     setConcept("");
     setTopic("");
-  }
-
-  async function addNewEntry() {
-    const res = await fetch("http://localhost:3000/concept/add", {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({concept: "Taylor Series", topic: "Mathematics", initialDate: null })
-    } )
-    const data = await res.json();
-    console.log(JSON.stringify(data))
-    console.log("status ", res.status)
   }
 
   return (
@@ -69,7 +55,7 @@ export default function NewEntryBox({ addFunc }) {
         </div>
 
         <div className="newEntryButtons">
-          <button className="newEntryButton" type="submit" onClick={addNewEntry}>
+          <button className="newEntryButton" type="submit">
             Add Entry
           </button>
           <button

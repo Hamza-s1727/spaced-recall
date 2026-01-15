@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from "./Header"
 import ReviewEntries from './ReviewEntries'
 import NewEntryBox from './NewEntryBox'
@@ -6,20 +6,41 @@ import InfoBox from "./InfoBox"
 import AllEntries from "./AllEntries"
 
 function App() {
+  const API = "http://localhost:3000"
   const [entries, setEntries] = useState([]);
-  const [currid, setId] = useState(0);
+  const [revEntries, setRevEntries] = useState([]);
 
-  function addEntry(entry) {
-    setEntries( prevEntries => [{id: currid, ...entry}, ... prevEntries])
-    setId(prev => prev + 1);
+  useEffect(() => {
+    loadEntries();
+  }, [])
+
+  async function loadEntries() {
+    const res = await fetch(`${API}/concepts`);
+    const data = await res.json()
+    setEntries(data);
+    console.log("loaded entries:", data.map(x => x.id));
+
+    const revRes = await fetch(`${API}/concepts/review/today`)
+    const revData = await revRes.json()
+    setRevEntries(revData)
+    console.log("loaded reviewable entries:", revData.map(x => x.id));
+
   }
 
-  function deleteEntry(id) {
-    console.log("Deleting concept with id ", id)
-    setEntries(prevEntries => {
-      let newEntries = prevEntries.filter(entry => entry.id != id)
-      return newEntries
-    });
+  async function addEntry(entry) {
+    const res = await fetch("http://localhost:3000/concept/add", {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entry)
+    } )
+    await loadEntries();
+  }
+
+  async function deleteEntry(id) {
+    const res = await fetch(`http://localhost:3000/concept/${id}`, {
+      method: 'DELETE',
+    } )
+    await loadEntries();
   }
 
   return (
@@ -27,7 +48,7 @@ function App() {
       <div>
         <Header />
         <InfoBox />
-        <ReviewEntries deleteFunc={deleteEntry}/>
+        <ReviewEntries entries={revEntries}   deleteFunc={deleteEntry}/>
         <NewEntryBox addFunc={addEntry} />
         <AllEntries entries={entries} deleteFunc={deleteEntry} />
       </div>
