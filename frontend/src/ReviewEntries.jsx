@@ -2,7 +2,7 @@ import { useState } from "react";
 import Entry from "./Entry";
 import "./ReviewEntries.css";
 
-export default function ReviewEntries({ entries = [], deleteFunc }) {
+export default function ReviewEntries({ entries = [], deleteFunc, reviewFunc}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,8 +28,10 @@ export default function ReviewEntries({ entries = [], deleteFunc }) {
                   initialDate={e.initialDate}
                   lastReviewed={e.lastReviewed}
                   nextReviewDate={e.nextReviewDate}
+                  repetitionsLeft={e.repetitionsLeft}
                   id={e.id}
                   deleteFunc={deleteFunc}
+                  reviewFunc={reviewFunc}
                 />
               ))
             )}

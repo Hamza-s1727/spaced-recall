@@ -37,8 +37,15 @@ function App() {
   }
 
   async function deleteEntry(id) {
-    const res = await fetch(`http://localhost:3000/concept/${id}`, {
+    const res = await fetch(`${API}/concept/${id}`, {
       method: 'DELETE',
+    } )
+    await loadEntries();
+  }
+
+  async function reviewEntry(id) {
+    const res = await fetch(`${API}/concepts/review/${id}`, {
+      method: 'PATCH',
     } )
     await loadEntries();
   }
@@ -48,7 +55,7 @@ function App() {
       <div>
         <Header />
         <InfoBox />
-        <ReviewEntries entries={revEntries}   deleteFunc={deleteEntry}/>
+        <ReviewEntries entries={revEntries} deleteFunc={deleteEntry} reviewFunc={reviewEntry}/>
         <NewEntryBox addFunc={addEntry} />
         <AllEntries entries={entries} deleteFunc={deleteEntry} />
       </div>

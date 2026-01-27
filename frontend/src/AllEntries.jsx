@@ -30,6 +30,7 @@ export default function AllEntries({ entries = [], deleteFunc}) {
                   lastReviewed={e.lastReviewed}
                   nextReviewDate={e.nextReviewDate}
                   id={e.id}
+                  repetitionsLeft={e.repetitionsLeft}
                   reviewable={false}
                   deleteFunc={deleteFunc}
                 />

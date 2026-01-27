@@ -4,6 +4,9 @@ import "./NewEntryBox.css"
 export default function NewEntryBox({ addFunc }) {
   const [concept, setConcept] = useState("");
   const [topic, setTopic] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [repetitions, setRepetitions] = useState("");
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -12,7 +15,7 @@ export default function NewEntryBox({ addFunc }) {
     const t = topic.trim();
     if (!c || !t) return;
 
-    addFunc({ concept: c, topic: t, initialDate: new Date().toISOString().slice(0, 10), lastReviewed: null, nextReviewDate: "2025-01-02" });
+    addFunc({ concept: c, topic: t, initialDate: new Date().toISOString().slice(0, 10), lastReviewed: null, nextReviewDate: startDate || Date().toISOString().slice(0, 10), repetitionsLeft: repetitions});
 
     setConcept("");
     setTopic("");
@@ -34,7 +37,7 @@ export default function NewEntryBox({ addFunc }) {
             id="concept"
             className="newEntryInput"
             type="text"
-            placeholder="e.g., Master Theorem"
+            placeholder="e.g. The Chain Rule"
             value={concept}
             onChange={(e) => setConcept(e.target.value)}
           />
@@ -48,10 +51,24 @@ export default function NewEntryBox({ addFunc }) {
             id="topic"
             className="newEntryInput"
             type="text"
-            placeholder="e.g., Computer Science"
+            placeholder="e.g. Calculus"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
           />
+          <label className="newEntryLabel" htmlFor="date">
+            Start Reviewing this on:
+          </label>
+          <input
+          id="date"
+          className="newEntryInput"
+          type="date"
+          value={startDate} onChange={(e) => setStartDate(e.target.value)}
+          >
+          </input>
+
+          <label className="newEntryLabel" htmlFor="repetitions">Total repetitions before deletion (leave blank for infinite)</label>
+          <input id="repetitions" className="newEntryInput" type="number" value={repetitions} onChange={(e) => setRepetitions((e.target.value <= 0 & e.target.value != "") ? 1 : e.target.value)}></input>
+          <label className="newEntryLabel" htmlFor="repetitions">Note that repetitions will be at a maximum of 30 days apart</label>
         </div>
 
         <div className="newEntryButtons">
@@ -64,6 +81,7 @@ export default function NewEntryBox({ addFunc }) {
             onClick={() => {
               setConcept("");
               setTopic("");
+              
             }}
           >
             Clear
