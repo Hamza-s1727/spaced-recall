@@ -24,52 +24,27 @@ function todayString() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function datePlusDays(days) {
-  function addPadding(n) {
-    return n < 10 ? "0" + n : String(n)
-  }
-  const d = new Date();
-  d.setDate(d.getDate() + days + 1);
+/*
+FindNextDate:
 
-  const yyyy = d.getFullYear();
-  const mm = addPadding(d.getMonth() + 1)
-  const dd = addPadding(d.getDate())
+@totalReviews: int, the number of reviews currently done on a concepts
 
-  return `${yyyy}-${mm}-${dd}`;
-}
-
+returns how many days to skip for the next review interval, for example a return
+of "30" means the next review will be in 30 days
+*/
 function findNextDate(totalReviews) {
   const reviews = [1, 3, 7, 14, 30]
   return (0 <= totalReviews && totalReviews <= 4) ? reviews[totalReviews] : 30
 }
 
-let concepts = [
-  {id: 0,
-    concept: "Cauchy Sequences: Definition",
-    topic: "Real Analysis",
-    initialDate: "2025-09-04",
-    lastReviewed: "2025-10-05",
-    nextReviewDate: todayString(),
-    intervalDays: 30,
-    repetitionsLeft: 1,
-    totalReviews: 2
-  }
-]
-let maxid = 1
-app.get("/health/db", async (req, res) => {
-  try {
-    const { rows } = await pool.query("select 1 as ok");
-    res.json(rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
 app.use(cors());
 app.use(express.json());
 
+/*
+GET REQUEST: "/concepts"
+
+returns all concepts from the table
+*/
 app.get("/concepts", async (req, res) => {
   //res.json(concepts) <-- local storage version  
   try {
@@ -99,8 +74,11 @@ app.get("/concepts", async (req, res) => {
 });
 
 
+/*
+GET REQUEST: "/concepts/review/today"
 
-
+returns all concepts from table where the next review date is today, in UTC time
+*/
 app.get("/concepts/review/today", async (req, res) => {
   try {
     const { rows } = await pool.query(`
@@ -129,11 +107,69 @@ app.get("/concepts/review/today", async (req, res) => {
   }
 });
 
+/*
+PATCH REQUEST: "/concepts/review/id"
 
-app.patch("/concepts/review/:id", (req, res) => {
+marks the concept as reviewed in the server, and sets the next review date
+*/
+app.patch("/concepts/review/:id", async (req, res) => {
+  const targetId = Number(req.params.id);
 
-  const targetId = Number(req.params.id)
+  try {
+    const { rows } = await pool.query(
+      `
+      SELECT
+        id,
+        repetitions_left AS "repetitionsLeft",
+        total_reviews AS "totalReviews"
+      FROM concepts
+      WHERE id = $1
+      `,
+      [targetId]
+    );
 
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "not found" });
+    }
+
+    const entry = rows[0];
+
+    if (entry.repetitionsLeft !== null && entry.repetitionsLeft === 1) {
+      const del = await pool.query(`DELETE FROM concepts WHERE id = $1`, [targetId]);
+
+      if (del.rowCount === 0) {
+        return res.status(404).json({ error: "not found" });
+      }
+
+      return res.status(204).send("");
+    }
+
+    // 3) Otherwise update review fields
+    const nextIntervalDays = findNextDate(entry.totalReviews);
+    const { rows: updated } = await pool.query(
+      `
+      UPDATE concepts
+      SET
+        last_reviewed = CURRENT_DATE,
+        interval_days = $2::int,
+        next_review_date = CURRENT_DATE + ($2 * INTERVAL '1 day'),
+        total_reviews = total_reviews + 1,
+        repetitions_left = CASE
+          WHEN repetitions_left IS NULL THEN NULL
+          ELSE repetitions_left - 1
+        END
+      WHERE id = $1
+      `,
+      [targetId, nextIntervalDays]
+    );
+
+    return res.status(200).send("");
+  } catch (err) {
+    console.error("Error Marking Concept as Reviewed:", err);
+    return res.status(500).json({ error: err });
+  }
+  /*
+  OLD IMPLEMENTATION
   const entry = concepts.find(e => e.id == targetId)
 
   if (entry == undefined) {
@@ -143,7 +179,7 @@ app.patch("/concepts/review/:id", (req, res) => {
 
   if (entry.repetitionsLeft == 1) {
     res.set("Content-Type", "application/json")
-    console.log("Total repititions finished, deleting concept with id ", targetId)
+    console.log("Total repetitions finished, deleting concept with id ", targetId)
     const index = concepts.findIndex(concept => concept.id == targetId);
     concepts.splice(index, 1);
     res.status(204)
@@ -159,9 +195,14 @@ app.patch("/concepts/review/:id", (req, res) => {
     console.log("reviews next: ", entry.nextReviewDate)
     res.status(201)
     res.send("")
-  }
+    */
 });
 
+/*
+POST REQUEST: concept/add
+
+adds a new concept to the database
+*/
 app.post("/concept/add", async (req, res) => {
   const {concept, topic, initialDate, nextReviewDate, repetitionsLeft} = req.body
   const reps = repetitionsLeft === "" ? null : Number(repetitionsLeft);
@@ -213,6 +254,11 @@ app.post("/concept/add", async (req, res) => {
   */
 })
 
+/*
+DELETE REQUEST: "/concept/id"
+
+deletes the entry from the database
+*/
 app.delete("/concept/:id", async (req, res) => {
   const targetId = Number(req.params.id);
 
@@ -224,7 +270,7 @@ app.delete("/concept/:id", async (req, res) => {
   )
 
   if (item.rowcount == 1) {res.status(404).json({error: "not found"})}
-  else {res.status(204).json();}
+  else {res.status(204).send("");}
   
 
 })
