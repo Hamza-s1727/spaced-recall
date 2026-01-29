@@ -17,8 +17,6 @@ const pool = new Pool({
 
 
 const app = express();
-console.log("DATABASE_URL host:", new URL(process.env.DATABASE_URL).host);
-
 
 function todayString() {
   return new Date().toISOString().slice(0, 10);
@@ -68,7 +66,7 @@ app.get("/concepts", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("GET /concepts DB error:", err);
+    console.error("Getting All Concepts Error:", err);
     res.status(500).json(err)
   }
 });
@@ -96,7 +94,7 @@ app.get("/concepts/review/today", async (req, res) => {
         repetitions_left AS "repetitionsLeft",
         total_reviews AS "totalReviews"
       FROM concepts
-      WHERE next_review_date = CURRENT_DATE
+      WHERE next_review_date <= CURRENT_DATE
       ORDER BY id DESC
     `);
 
@@ -144,7 +142,6 @@ app.patch("/concepts/review/:id", async (req, res) => {
       return res.status(204).send("");
     }
 
-    // 3) Otherwise update review fields
     const nextIntervalDays = findNextDate(entry.totalReviews);
     const { rows: updated } = await pool.query(
       `
