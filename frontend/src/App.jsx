@@ -6,7 +6,7 @@ import InfoBox from "./InfoBox"
 import AllEntries from "./AllEntries"
 
 function App() {
-  const API = "http://localhost:3000"
+  const API = import.meta.env.API_URL || "http://localhost:3000"
   const [entries, setEntries] = useState([]);
   const [revEntries, setRevEntries] = useState([]);
 
@@ -28,7 +28,7 @@ function App() {
   }
 
   async function addEntry(entry) {
-    const res = await fetch("http://localhost:3000/concept/add", {
+    const res = await fetch(`${API}/concept/add`, {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(entry)
