@@ -65,7 +65,8 @@ npm run dev
 
 ## 3. Frontend Setup
 
-Create a `.env` file in the `frontend` folder, and set the URL of your backend
+Create a `.env` file in the `frontend` folder, pointing to your backend (or localhost),
+
 the frontend `.env` will have this format
 ```
 API_URL="http://localhost:3000" # or backend URL of your own setup.
