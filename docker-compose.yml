@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      PORT: ${BACKEND_PORT}
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      API_URL: ${API_URL}
+    ports:
+      - "${FRONTEND_PORT}:5173"
