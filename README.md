@@ -6,9 +6,8 @@ date.
 
 ## Prerequisites
 
-* Node.js
+* Docker Desktop
 * Git
-* npm
 * any hosted Postgres (Supabase recomennded)
 
 # Setup
@@ -19,22 +18,15 @@ date.
 
 ## 2. Backend and Environment Setup
 
-Install dependencies for both the frontend and backend
-```
-cd spaced-recall
-cd backend
-npm install
-cd ../frontend
-npm install
-```
-
-Next, create two `.env` files, one in the frontend and backend folders
-
-The backend `.env` will have this format
+in the project root, create a `.env` folder, with the following format
 
 ```
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE
-PORT=3000 # optional, default 3000
+BACKEND_PORT=3000
+FRONTEND_PORT=5173
+
+DATABASE_URL=my_database_url_here
+
+API_URL=http://localhost:3000 # or host of your choice
 ```
 
 It's recommended to use supabase for the  `DATABASE_URL`, once you have created an account and made a table, tap "Connect", then copy the __Session Pooler__ connection string and paste it
@@ -58,23 +50,13 @@ create table if not exists concepts (
 );
 ```
 
-Finally, run the backend
-```
-npm run dev
-```
+Finally, make sure you have docker desktop installed. Verify that docker is running by running the following command
 
-## 3. Frontend Setup
+```docker --version```
 
-Create a `.env` file in the `frontend` folder, pointing to your backend (or localhost),
+If everything is running, in the project root:
 
-the frontend `.env` will have this format
-```
-API_URL="http://localhost:3000" # or backend URL of your own setup.
-```
+``` docker compose up --build ```
 
-Finally, Run the frontend, the default port is 5173
-
-``` npm run dev ```
-
-The frontend should run on `https://localhost:5173`, accessible by any browser
+All dependencies should install automatically. Finally, open `https://localhost:5173` (or port of your choice) and enjoy the program!
 
